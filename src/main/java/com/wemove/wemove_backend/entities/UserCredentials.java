@@ -2,23 +2,19 @@ package com.wemove.wemove_backend.entities;
 
 import javax.persistence.*;
 
+
+
 @Entity
 @Table(name = "login")
 public class UserCredentials {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String email;
     private String password;
 
-    public int getId() {
-        return id;
-    }
+    private UserType userType;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+
 
     public String getEmail() {
         return email;
@@ -36,6 +32,20 @@ public class UserCredentials {
         this.password = password;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
 
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
+    @Override
+    public String toString() {
+        return "UserCredentials{" +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userType=" + userType +
+                '}';
+    }
 }

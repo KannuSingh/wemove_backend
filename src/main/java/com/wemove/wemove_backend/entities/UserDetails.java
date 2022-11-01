@@ -1,5 +1,6 @@
 package com.wemove.wemove_backend.entities;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -12,10 +13,30 @@ public class UserDetails {
     private String email;
     private String firstname;
     private String lastname;
+    @Column(name="date_of_birth")
     private String dateOfBirth;
-    @Column(name = "address_id")
-    private int address;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
     private String mobile;
+
+    private String securityQuestion;
+
+    private String securityAnswer;
+
+    private  UserType userType;
+    @Transient
+    private String password;
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
     public int getId() {
         return id;
@@ -57,11 +78,11 @@ public class UserDetails {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public int getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(int address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -71,6 +92,30 @@ public class UserDetails {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -83,6 +128,8 @@ public class UserDetails {
                 ", dateOfBirth='" + dateOfBirth + '\'' +
                 ", address=" + address +
                 ", mobile='" + mobile + '\'' +
+                ", securityQuestion='" + securityQuestion + '\'' +
+                ", securityAnswer='" + securityAnswer + '\'' +
                 '}';
     }
 }
