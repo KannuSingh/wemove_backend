@@ -3,6 +3,7 @@ package com.wemove.wemove_backend.controller;
 import com.wemove.wemove_backend.entities.Credentials;
 import com.wemove.wemove_backend.entities.ResetPassword;
 import com.wemove.wemove_backend.entities.UserDetails;
+import com.wemove.wemove_backend.exceptions.InvalidCredentials;
 import com.wemove.wemove_backend.services.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,11 @@ public class OnboardingController {
     }
 
     @PostMapping("/userLogin")
-    public boolean login(@RequestBody Credentials userCredentials){
-        return userDetailsService.checkCredentials(userCredentials);
+    public UserDetails login(@RequestBody Credentials userCredentials){
+        UserDetails userDetails = userDetailsService.checkCredentials(userCredentials);
+        if (userDetails == null) throw new InvalidCredentials("Invalid Credentials");
+        return userDetails;
+
     }
 
     @PostMapping("/register")

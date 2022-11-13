@@ -32,8 +32,14 @@ public class UserDetailsService {
         return userDetailsRepository.save(userDetails);
     }
 
-    public boolean checkCredentials(Credentials userCredentials) {
-        return true;
+    public UserDetails checkCredentials(Credentials _userCredentials) {
+        Optional<UserCredentials> optionalUserCredentials = userCredentialsRepository.findUserCredentialsByEmail(_userCredentials.getEmail());
+        UserCredentials usercredentials = optionalUserCredentials.isPresent() ? optionalUserCredentials.get():null;
+        if(usercredentials!=null && usercredentials.getPassword().equals(_userCredentials.getPassword()) ) {
+            Optional<UserDetails> optionalUserDetails = userDetailsRepository.findUserDetailsByEmail(_userCredentials.getEmail());
+            return optionalUserDetails.isPresent() ?optionalUserDetails.get():null;
+        }
+        return null;
     }
 
     public String getSecurityQuestion(String email) {
