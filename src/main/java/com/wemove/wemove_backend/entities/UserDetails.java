@@ -1,11 +1,14 @@
 package com.wemove.wemove_backend.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "user_details")
-public class UserDetails {
+public class UserDetails implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -29,6 +32,7 @@ public class UserDetails {
     private  UserType userType;
     @Transient
     private String password;
+
 
     public UserType getUserType() {
         return userType;

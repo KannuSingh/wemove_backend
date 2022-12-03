@@ -2,6 +2,7 @@ package com.wemove.wemove_backend.controller;
 
 import com.wemove.wemove_backend.entities.Credentials;
 import com.wemove.wemove_backend.entities.ResetPassword;
+import com.wemove.wemove_backend.entities.SecurityQuestionDto;
 import com.wemove.wemove_backend.entities.UserDetails;
 import com.wemove.wemove_backend.exceptions.InvalidCredentials;
 import com.wemove.wemove_backend.services.UserDetailsService;
@@ -31,8 +32,14 @@ public class OnboardingController {
     }
 
     @PostMapping("/forgotPassword")
-    public String getSecurityQuestion(@RequestParam String email){
-        return userDetailsService.getSecurityQuestion(email);
+    public SecurityQuestionDto getSecurityQuestion(@RequestParam String email){
+        SecurityQuestionDto result= userDetailsService.getSecurityQuestion(email);
+        if(result!= null) {
+            return result;
+        }
+        else{
+            throw new RuntimeException("User Not Found");
+        }
     }
 
     @PostMapping("/forgotPassword/resetPassword")

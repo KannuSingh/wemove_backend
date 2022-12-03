@@ -1,9 +1,6 @@
 package com.wemove.wemove_backend.services;
 
-import com.wemove.wemove_backend.entities.Credentials;
-import com.wemove.wemove_backend.entities.ResetPassword;
-import com.wemove.wemove_backend.entities.UserCredentials;
-import com.wemove.wemove_backend.entities.UserDetails;
+import com.wemove.wemove_backend.entities.*;
 import com.wemove.wemove_backend.repositories.UserCredentialsRepository;
 import com.wemove.wemove_backend.repositories.UserDetailsRepository;
 import org.springframework.stereotype.Service;
@@ -42,9 +39,12 @@ public class UserDetailsService {
         return null;
     }
 
-    public String getSecurityQuestion(String email) {
+    public SecurityQuestionDto getSecurityQuestion(String email) {
         Optional<UserDetails> optionalUserDetails = userDetailsRepository.findUserDetailsByEmail(email);
-        return optionalUserDetails.isPresent() ?optionalUserDetails.get().getSecurityQuestion():"User Not Found";
+        return optionalUserDetails.isPresent() ?
+                new SecurityQuestionDto(optionalUserDetails.get().getSecurityQuestion(),email)
+                :
+                null;
 
     }
 

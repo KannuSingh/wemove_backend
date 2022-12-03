@@ -1,16 +1,10 @@
 package com.wemove.wemove_backend.controller;
 
-import com.wemove.wemove_backend.entities.Credentials;
-import com.wemove.wemove_backend.entities.MoveRequest;
-import com.wemove.wemove_backend.entities.UserDetails;
-import com.wemove.wemove_backend.exceptions.InvalidCredentials;
+import com.wemove.wemove_backend.entities.*;
 import com.wemove.wemove_backend.exceptions.MoveRequestCreationException;
 import com.wemove.wemove_backend.services.MoveRequestService;
-import com.wemove.wemove_backend.services.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.wemove.wemove_backend.services.ReviewService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +12,11 @@ import java.util.List;
 public class CustomerController {
 
     private final MoveRequestService moveRequestService;
+    private final ReviewService reviewService;
 
-    public CustomerController(MoveRequestService moveRequestService) {
+    public CustomerController(MoveRequestService moveRequestService, ReviewService reviewService) {
         this.moveRequestService = moveRequestService;
+        this.reviewService = reviewService;
     }
 
 
@@ -32,8 +28,33 @@ public class CustomerController {
 
     }
 
-    @PostMapping("/getAllMoveRequest")
-    public List<MoveRequest> createMoveRequest(@RequestParam String email){
-        return moveRequestService.getAllMoveRequest(email);
+    @PostMapping("/getAllCustomerMoveRequest")
+    public List<MoveRequestDto> getAllCustomerMoveRequest(@RequestParam String email){
+        return moveRequestService.getAllCustomerMoveRequest(email);
     }
+
+    @PostMapping("/acceptPriceQuote")
+    public boolean acceptPriceQuote(@RequestParam String moverEmail, @RequestParam int moveRequestId){
+        moveRequestService.acceptPriceQuote(moverEmail,moveRequestId);
+        moveRequestService.updateMoveRequestStatus(moveRequestId,MoveStatus.ACCEPTED);
+        return true;
+    }
+    @PostMapping("/declinePriceQuote")
+    public boolean declinePriceQuote(@RequestParam String moverEmail, @RequestParam int moveRequestId){
+        moveRequestService.declinePriceQuote(moverEmail,moveRequestId);
+        return true;
+    }
+
+    @PostMapping("/addReview")
+    public Review addReview(@RequestBody Review review){
+        return this.reviewService.addReview(review);
+    }
+
+
+    @GetMapping("/getStatusTimeline")
+    public List<MRStatusItem> getStatusTimeline( @RequestParam int moveRequestId){
+        return moveRequestService.getMoveStatusTimeline(moveRequestId);
+    }
+
+
 }
