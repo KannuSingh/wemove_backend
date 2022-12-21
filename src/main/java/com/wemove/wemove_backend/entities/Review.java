@@ -10,7 +10,7 @@ public class Review {
     private String moveRequestId;
     private String customerEmail;
     private String moverEmail;
-    private int rating;
+    private float rating;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
@@ -48,11 +48,11 @@ public class Review {
         this.moverEmail = moverEmail;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

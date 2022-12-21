@@ -17,6 +17,9 @@ public interface MoveRequestRepository  extends JpaRepository<MoveRequest, Integ
     @Query("SELECT mr FROM MoveRequest mr WHERE mr.moveRequestStatus = com.wemove.wemove_backend.entities.MoveStatus.CREATED OR mr.moveRequestStatus = com.wemove.wemove_backend.entities.MoveStatus.SUGGESTED")
     List<MoveRequest> findAllMoveRequestForStatusActive();
 
+    @Query("SELECT mr FROM MoveRequest mr WHERE mr.moveRequestOwner = :email AND mr.moveRequestStatus = com.wemove.wemove_backend.entities.MoveStatus.FINISHED")
+    List<MoveRequest> findAllMoveRequestForStatusCompleted(String email);
+
 
 
     @Modifying

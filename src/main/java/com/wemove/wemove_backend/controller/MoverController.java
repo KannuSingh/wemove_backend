@@ -50,6 +50,12 @@ public class MoverController {
         return moveRequestService.getMyAllMoveRequestDeliveries(moverEmail);
     }
 
+    @PostMapping("/getAllCompletedMoveRequest")
+    public List<MoveRequestDto> getAllCompletedMoveRequest(@RequestParam String moverEmail){
+        System.out.println("getAllCompletedMoveRequest: "+moverEmail);
+        return moveRequestService.getAllCompletedMoveRequest(moverEmail);
+    }
+
 
     @PostMapping("/updateMoveRequestStatus")
     public void updateMoveRequestStatus(@RequestParam int moveRequestId, @RequestParam MoveStatus moveStatus){

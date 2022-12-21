@@ -92,7 +92,39 @@ public class MoveRequestService {
         }
         return moveRequestDtos;
     }
+    public List<MoveRequestDto> getAllCompletedMoveRequest(String email){
+        List<MoveRequestDto> moveRequestDtos = new ArrayList<>();
+        List<MoveRequest> moveRequests =  moveRequestRepository.findAllMoveRequestForStatusCompleted(email);
+        for(MoveRequest moveRequest: moveRequests){
+            List<InventoryItem> inventoryItemList = inventoryItemRepository.findAllInventoryItemByMoveRequest(moveRequest.getMoveRequestId());
+            List<InventoryItemGroup> inventoryItemGroups = new ArrayList<>();
 
+            Map<String,List<String>> itemsAndCategoryMapping = new HashMap<>();
+            for(InventoryItem inventoryItem : inventoryItemList){
+                if(itemsAndCategoryMapping.containsKey(inventoryItem.getCategory())){
+                    itemsAndCategoryMapping.get(inventoryItem.getCategory()).add(inventoryItem.getItemName());
+                }
+                else{
+                    List<String> items = new ArrayList<>();
+                    items.add(inventoryItem.getItemName());
+                    itemsAndCategoryMapping.put(inventoryItem.getCategory(),items);
+                }
+            }
+            for (Map.Entry<String,List<String>> entry :itemsAndCategoryMapping.entrySet()) {
+                InventoryItemGroup inventoryItemGroup = new InventoryItemGroup();
+                inventoryItemGroup.setItems(entry.getValue());
+                inventoryItemGroup.setCategory(entry.getKey());
+                inventoryItemGroups.add(inventoryItemGroup);
+            }
+            moveRequest.setItemInventory(inventoryItemGroups);
+            List<PriceQuote> priceQuotes = this.priceQuoteRepository.findAllPriceQuoteByMoveRequestId(moveRequest.getMoveRequestId());
+            MoveRequestDto moveRequestDto = new MoveRequestDto();
+            moveRequestDto.setMoveRequest(moveRequest);
+            moveRequestDto.setPriceQuotes(priceQuotes);
+            moveRequestDtos.add(moveRequestDto);
+        }
+        return moveRequestDtos;
+    }
 
     public List<MoveRequestDto> getAllMoveRequestDeliveries(){
         List<MoveRequestDto> moveRequestDtos = new ArrayList<>();
